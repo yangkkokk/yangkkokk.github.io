@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="查看了大量关于beaglebone black的i2s dac输出方法，总结了一下不使用转接板，可以支持runeos,volumo等hifi系统的i2s dac且通用的使用方法。 无操作系统限制，只要是复合下三个步奏都适用 第一步,首先找到io口 beaglebone black 的i2s是通过NXP TDA19988到hdmi输出的，但是在p9引脚里包含了这些针的引出.根据外部DAC选择你要使用">
+<meta property="og:type" content="website">
+<meta property="og:title" content="beaglebone black i2s dac使用方法">
+<meta property="og:url" content="http://yoursite.com/beaglebone-black-i2s-dac使用方法/index.html">
+<meta property="og:site_name" content="贪婪">
+<meta property="og:description" content="查看了大量关于beaglebone black的i2s dac输出方法，总结了一下不使用转接板，可以支持runeos,volumo等hifi系统的i2s dac且通用的使用方法。 无操作系统限制，只要是复合下三个步奏都适用 第一步,首先找到io口 beaglebone black 的i2s是通过NXP TDA19988到hdmi输出的，但是在p9引脚里包含了这些针的引出.根据外部DAC选择你要使用">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-18T14:00:10.376Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="beaglebone black i2s dac使用方法">
+<meta name="twitter:description" content="查看了大量关于beaglebone black的i2s dac输出方法，总结了一下不使用转接板，可以支持runeos,volumo等hifi系统的i2s dac且通用的使用方法。 无操作系统限制，只要是复合下三个步奏都适用 第一步,首先找到io口 beaglebone black 的i2s是通过NXP TDA19988到hdmi输出的，但是在p9引脚里包含了这些针的引出.根据外部DAC选择你要使用">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/beaglebone-black-i2s-dac使用方法/"/>
+
+
+
+
+
+  <title>beaglebone black i2s dac使用方法 | 贪婪</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">贪婪</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline">beaglebone black i2s dac使用方法</h1>
+
+
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <p>查看了大量关于beaglebone black的i2s dac输出方法，总结了一下不使用转接板，可以支持runeos,volumo等hifi系统的i2s dac且通用的使用方法。</p>
+<p>无操作系统限制，只要是复合下三个步奏都适用</p>
+<p>第一步,首先找到io口</p>
+<p>beaglebone black 的i2s是通过NXP TDA19988到hdmi输出的，但是在p9引脚里包含了这些针的引出.根据外部DAC选择你要使用的IO。</p>
+<p>P9_25 - A14/0 - mcasp0_ahclkx (oscillator) - GPIO3_21<br>P9_31 - A13/0 - mcaps0_aclkx (bit clock) - SPI1_SCLK<br>P9_29 - B13/0 - mcasp0_fsx (lr clock) - SPI1_D0<br>P9_30 - D12/0 - mcasp0_axr0 (data0) - SPI1_D1<br>不使用转接板就是没有时钟，或者使用hdmi的时钟.<br>SPI1_CSOP9_28               Bitstream</p>
+<p>SPI1_D0P9_29               Left/Right clock</p>
+<p>SPI1_SCLKP9_31               Bit clock</p>
+<p>第二步,查看有没有名称为dsp的字符设备节点。</p>
+<p>ls -ald /dev/dsp*</p>
+<p>crw-rw—T 1 root audio 14, 3 Jan  1  2000 /dev/dsp</p>
+<p>获得声卡名称命令</p>
+<p>aplay -L</p>
+<p>default:CARD=Black</p>
+<p>TI BeagleBone Black,<br>Default Audio Device</p>
+<p>第三步，使用播放器播放,</p>
+<p>ffmpeg -i test.mp3  -f alsa “default:CARD=Black” -re -vol 20 </p>
+<p>这里的-vol分为256级，0为静音。</p>
+<p>I2S为三线总线，3个信号分别为：</p>
+<p>① 串行时钟SCK，也叫位时钟（BCK）。即每发送1位数字音频数据，SCK上都有1个脉冲。SCK的频率=2×采样频率×采样位数。在数据传输过程中，I2S总线的发送器和接收器都可以作为系统的主机来提供系统的时钟频率。</p>
+<p>② 帧时钟WS，即命令（声道）选择，用于切换左右声道的数据。WS的频率等于采样频率，由系统主机提供。WS为“1”表示传输的是左声道的数据，WS为“0”表示传输的是右声道的数据。</p>
+<p>③ 串行数据信号SD，用于传输二进制补码表示的音频数据。</p>
+<p>注:文章有引用的地方来自这些地方。</p>
+<p><a href="https://www.element14.com/community/community/designcenter/single-board-computers/next-gen_beaglebone//blog/2013/05/28/bbb--audio-notes" target="_blank" rel="noopener">https://www.element14.com/community/community/designcenter/single-board-computers/next-gen_beaglebone//blog/2013/05/28/bbb--audio-notes</a></p>
+<p><a href="http://blog.sina.com.cn/s/blog_5372b4a00102wk34.html" target="_blank" rel="noopener">http://blog.sina.com.cn/s/blog_5372b4a00102wk34.html</a></p>
+<p><a href="http://blog.csdn.net/greston/article/details/8076584" target="_blank" rel="noopener">http://blog.csdn.net/greston/article/details/8076584</a></p>
+<p><a href="http://bbb.ieero.com/" target="_blank" rel="noopener">http://bbb.ieero.com/</a></p>
+
+        
+      </div>
+      
+      
+      
+    </div>
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
