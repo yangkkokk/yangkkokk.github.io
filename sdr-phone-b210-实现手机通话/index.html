@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="http://ftp.osmocom.org/api/latest/ 核心库  编译安装以下库      git clone --recursive https://github.com/axilirator/gr-gsm/ -b fixeria/trx     cd gr-gsm      mkdir build     cd build      cmake ..      mak">
+<meta name="description" content="编译安装以下库  首先要编译 gr-osmosdr git clone https://github.com/glfw/glfw cd glfw mkdir build cd build cmake ../ -DBUILD_SHARED_LIBS=true make sudo make install sudo ldconfig  git clone --recursive https://git">
 <meta property="og:type" content="website">
 <meta property="og:title" content="sdr phone b210 实现手机通话">
 <meta property="og:url" content="http://yoursite.com/sdr-phone-b210-实现手机通话/index.html">
 <meta property="og:site_name" content="贪婪">
-<meta property="og:description" content="http://ftp.osmocom.org/api/latest/ 核心库  编译安装以下库      git clone --recursive https://github.com/axilirator/gr-gsm/ -b fixeria/trx     cd gr-gsm      mkdir build     cd build      cmake ..      mak">
+<meta property="og:description" content="编译安装以下库  首先要编译 gr-osmosdr git clone https://github.com/glfw/glfw cd glfw mkdir build cd build cmake ../ -DBUILD_SHARED_LIBS=true make sudo make install sudo ldconfig  git clone --recursive https://git">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-18T19:17:35.122Z">
+<meta property="og:updated_time" content="2018-01-19T06:08:33.699Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="sdr phone b210 实现手机通话">
-<meta name="twitter:description" content="http://ftp.osmocom.org/api/latest/ 核心库  编译安装以下库      git clone --recursive https://github.com/axilirator/gr-gsm/ -b fixeria/trx     cd gr-gsm      mkdir build     cd build      cmake ..      mak">
+<meta name="twitter:description" content="编译安装以下库  首先要编译 gr-osmosdr git clone https://github.com/glfw/glfw cd glfw mkdir build cd build cmake ../ -DBUILD_SHARED_LIBS=true make sudo make install sudo ldconfig  git clone --recursive https://git">
 
 
 
@@ -237,50 +237,65 @@
       <div class="post-body">
         
         
-          <pre><code>      http://ftp.osmocom.org/api/latest/ 核心库
+          <pre><code>编译安装以下库
 
-编译安装以下库
+首先要编译 gr-osmosdr
+git clone https://github.com/glfw/glfw
+cd glfw
+mkdir build
+cd build
+cmake ../ -DBUILD_SHARED_LIBS=true
+make
+sudo make install
+sudo ldconfig
 
-    git clone --recursive https://github.com/axilirator/gr-gsm/ -b fixeria/trx
-    cd gr-gsm 
-    mkdir build
-    cd build 
-    cmake .. 
-    make 
-    make install 
-    ldconfig
-    注意需要GNURadio,里面的grc可以实用
+git clone --recursive https://github.com/axilirator/gr-gsm/ -b fixeria/trx
+cd gr-gsm 
+mkdir build
+cd build 
+cmake .. 
+make 
+make install 
+ldconfig
+注意需要GNURadio,里面的grc可以实用
 
-    git clone git://git.osmocom.org/libosmocore.git 
-    cd libosmocore 
-    autoreconf -i 
-    ./configure 
-    make
-    make install
-    ldconfig -i
+git clone git://git.osmocom.org/libosmocore.git 
+cd libosmocore 
+autoreconf -i 
+./configure 
+make
+make install
+ldconfig -i
 
 git clone git://git.osmocom.org/osmocom-bb.git -b fixeria/sdr_phy 
-    cd osmocom-bb 
-    git pull --rebase 
-    cd src 
-    make nofirmware
+cd osmocom-bb 
+git pull --rebase 
+cd src 
+make nofirmware
+</code></pre><p>cd youpath/gr-gsm/apps<br>./grgsm_trx -g 40 -G 90</p>
+<pre><code>cd youpath/osmocom-bb/src/host/trxcon/
 
+./trxcon -d DAPP:DL1C:DSCH
+</code></pre><p>cd youpath/osmocom-bb/src/host/layer23/src/misc/</p>
+<p>./ccch_scan -a acfan -i 127.0.0.1</p>
+<pre><code>run wireshrk open gsmtap filter 
+</code></pre><p>i used my acfcn 24 but no gsm_sms found</p>
+<p>pass it, try mobile pj</p>
+<p>./grgsm_trx -p 5705 –tx-gain 90<br>./trxcon -p 5705 -s /tmp/osmocom_l2<br>./mobile<br>Failed to parse the config file: ‘/root/.osmocom/bb/mobile.cfg’<br>Please check or create config file using: ‘touch /root/.osmocom/bb/mobile.cfg’</p>
+<p>touch it </p>
+<p>run ./mobile -c ~/.osmocom/bb/default.cfg</p>
+<p> telnet localhost 4247</p>
+<p>OsmocomBB# sim testcard 1<br>SIM already attached, remove first!<br>OsmocomBB# sim remove 1<br>No SIM attached!<br>% (MS 1)<br>% No service.</p>
+<p>[i] Configure timeslot filter to: drop all<br>[i] Recv SETSLOT cmd<br>[i] Configure timeslot filter to: TS 0<br>[i] Recv RXTUNE cmd<br>[i] Recv TXTUNE cmd<br>[i] Recv POWERON CMD<br>[i] Starting transceiver…<br>[i] Recv POWEROFF cmd<br>[i] Stopping transceiver…<br>[i] Setting TA value 0<br>[i] Recv ECHO cmd<br>[i] Recv SETSLOT cmd<br>[i] Configure timeslot filter to: drop all<br>[i] Recv SETSLOT cmd<br>[i] Configure timeslot filter to: TS 0<br>[i] Recv RXTUNE cmd<br>[i] Recv TXTUNE cmd<br>[i] Recv POWERON CMD<br>[i] Starting transceiver…</p>
+<p>5&gt; sched_trx.c:196 Delete TDMA timeslot #0</p>
+<p><0001> l1ctl.c:364 Received power measurement request (GSM900: 0 -&gt; 124)</0001></p>
+<p><0001> l1ctl.c:364 Received power measurement request (DCS1800: 512 -&gt; 885)</0001></p>
+<p><0001> l1ctl.c:364 Received power measurement request (GSM900: 955 -&gt; 1023)</0001></p>
+<p><0001> l1ctl.c:388 Received reset request (1)</0001></p>
+<p><0005> sched_trx.c:154 Reset scheduler and clock counter</0005></p>
+<p><0001> l1ctl.c:306 Received FBSB request (GSM900 1011)</0001></p>
+<p>Where is the problem?</p>
 
-
-cd youpath/gr-gsm/apps
-./grgsm_trx -g 40 -G 90
-
-
-     cd youpath/osmocom-bb/src/host/trxcon/
-
-     ./trxcon -d DAPP:DL1C:DSCH
-
-cd youpath/osmocom-bb/src/host/layer23/src/misc/
-
-./ccch_scan -a acfan -i 127.0.0.1
-
-     run wireshrk puck gsmtap filter 
-</code></pre>
         
       </div>
       
